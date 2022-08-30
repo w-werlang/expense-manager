@@ -7,6 +7,7 @@ import com.wwerlang.learnspringhibernate.repository.ExpenseReportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -27,13 +28,23 @@ public class ExpenseReportService {
     }
 
     public ExpenseReport save(ExpenseReport expenseReport) {
-        expenseReport.calculateTotalAmount();
+        setTotalAmount(expenseReport);
         setExpenseEntryReference(expenseReport);
         return repository.save(expenseReport);
     }
 
     public void delete(ExpenseReport expenseReport) {
         repository.delete(expenseReport);
+    }
+
+    private void setTotalAmount(ExpenseReport expenseReport) {
+        BigDecimal calculatedAmount = BigDecimal.ZERO;
+
+        for (ExpenseEntry expenseEntry : expenseReport.getExpenseEntries()) {
+            calculatedAmount = calculatedAmount.add(expenseEntry.getAmount());
+        }
+
+        expenseReport.setTotalAmount(calculatedAmount);
     }
 
     private void setExpenseEntryReference(ExpenseReport expenseReport) {

@@ -43,14 +43,4 @@ public class ExpenseReport {
     @OneToMany(mappedBy = "expenseReport", cascade = CascadeType.PERSIST)
     private List<ExpenseEntry> expenseEntries = new ArrayList<>();
 
-    public void calculateTotalAmount() {
-        BigDecimal calculatedAmount = BigDecimal.ZERO;
-
-        for (ExpenseEntry expenseEntry : expenseEntries) {
-            calculatedAmount = calculatedAmount.add(expenseEntry.getAmount());
-        }
-
-        totalAmount = calculatedAmount;
-    }
-
 }
